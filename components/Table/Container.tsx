@@ -18,9 +18,7 @@ export default function TableContainer(props: TableContainerProps) {
 
   const getRowData = (row: any[]) =>
     row.map((data, index) => (
-      <TableCell key={data.cellId} onClick={cellClick} data={data}>
-        {data.content}
-      </TableCell>
+      <TableCell key={data.cellId} onClick={cellClick} data={data} />
     ));
 
   const getRows = (rows: any[][]) =>

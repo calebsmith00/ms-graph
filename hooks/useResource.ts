@@ -34,12 +34,8 @@ export default function useResource({
     return rows;
   };
 
-  const updateCellData = async (data: any) => {
-    const checkForCellId = async (
-      arr: any[],
-      id: string,
-      callback: Function
-    ) => {
+  const updateCellData = (data: any) => {
+    const checkForCellId = (arr: any[], id: string, callback: Function) => {
       arr.forEach((cell: any, cellIndex: number) => {
         if (cell.length === undefined) {
           if (cell[id] === data[id]) {
@@ -53,44 +49,19 @@ export default function useResource({
           });
       });
 
-      return Promise.resolve(callback(arr));
+      return callback(arr);
     };
 
-    const newHeaders = await checkForCellId(
+    const newHeaders = checkForCellId(
       headers,
       "headerId",
       (data: any[]) => data || headers
     );
 
-    setHeaders(newHeaders);
+    const newRows = checkForCellId(rows, "cellId", (data: any) => data || rows);
 
-    checkForCellId(rows, "cellId", (data: any) => {
-      if (!data) return;
-      return setRows(data);
-    });
-
-    // if (data.headerId) {
-    //   const newHeaders: any[] = [...headers];
-
-    //   newHeaders.forEach((cell: any, cellIndex: number) => {
-    //     // cell.forEach((cellKey: any) => {
-    //     //   if (cellKey.headerId === data.cellId) {
-    //     //     cellKey.content = data.content;
-    //     //   }
-    //     // });
-    //   });
-    // } else {
-    //   const newRows: any[] = [...rows];
-    //   newRows.forEach((cell: any, cellIndex: number) => {
-    //     cell.forEach((cellKey: any) => {
-    //       if (cellKey.cellId === data.cellId) {
-    //         cellKey.content = data.content;
-    //       }
-    //     });
-    //   });
-
-    //   setRows(newRows);
-    // }
+    setHeaders([...newHeaders]);
+    setRows([...newRows]);
   };
 
   useEffect(() => {
