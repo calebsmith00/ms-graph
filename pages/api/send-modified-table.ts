@@ -1,6 +1,8 @@
+import { ResponseType } from "@microsoft/microsoft-graph-client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { parse } from "node-html-parser";
 import { client } from "../../lib/client";
+import parser from "../../lib/html";
 
 export default async function handler(
   req: NextApiRequest,
@@ -19,6 +21,18 @@ export default async function handler(
         content: parsed.toString(),
       },
     ]);
+
+    if (replaceOnenoteData === undefined) {
+      console.log(`Old target: ${targetId}`);
+      const newContent = await client
+        .api(contentUrl + "?includeIDs=true")
+        .responseType(ResponseType.TEXT)
+        .get();
+
+      return res.status(200).json({
+        html: newContent,
+      });
+    }
   }
 
   res.status(200).json({});

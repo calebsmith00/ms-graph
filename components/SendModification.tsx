@@ -5,9 +5,9 @@ interface SendModProps {
 }
 
 export default function SendModification(props: SendModProps) {
-  const handleClick = () => {
+  const handleClick = async () => {
     props.updateModified(false);
-    props.sendModifiedTable();
+    await props.sendModifiedTable();
   };
 
   return props.isModified ? (

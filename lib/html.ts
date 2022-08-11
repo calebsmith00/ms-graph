@@ -253,7 +253,6 @@ export default function parse(html: string): Parser | undefined {
   const htmlParser = new DOMParser();
   const htmlDoc: Document = htmlParser.parseFromString(html, "text/html");
 
-  console.log(htmlDoc);
   const data: Parser = Parser.init(htmlDoc)
     .setTableId("trainingTable")
     .getTable()

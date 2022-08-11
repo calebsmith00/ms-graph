@@ -18,7 +18,7 @@ export default function useResource({
   const [rows, setRows] = useState<any[]>([]);
   const [metadata, setMetadata] = useState<any[]>([]);
   const [modified, setModified] = useState<boolean>(false);
-  const [parserObj, setParserObj] = useState<any>(undefined);
+  const [parserObj, setParserObj] = useState<any>(preParsed);
 
   const parseToRows = () => {
     const rows: string[][] = [];
@@ -61,7 +61,7 @@ export default function useResource({
     const newRows = checkForCellId(rows, "cellId", (data: any) => data || rows);
 
     updateModified(true);
-    setParserObj(preParsed.editCell(data));
+    setParserObj(parserObj.editCell(data));
     setHeaders([...newHeaders]);
     setRows([...newRows]);
   };
@@ -90,6 +90,13 @@ export default function useResource({
       "http://localhost:3000/api/send-modified-table",
       fetchOptions
     );
+
+    const update = await reqUpdate.json();
+
+    if (update.html) {
+      const newParsed = parse(update.html);
+      setParserObj(newParsed);
+    }
   };
 
   useEffect(() => {
