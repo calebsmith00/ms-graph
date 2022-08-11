@@ -1,13 +1,19 @@
+import { MouseEvent } from "react";
+
 interface SendModProps {
   isModified: boolean;
   updateModified: Function;
   sendModifiedTable: Function;
+  onClickOutside: Function;
 }
 
 export default function SendModification(props: SendModProps) {
-  const handleClick = async () => {
+  const handleClick = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
     props.updateModified(false);
     await props.sendModifiedTable();
+    props.onClickOutside(e);
   };
 
   return props.isModified ? (

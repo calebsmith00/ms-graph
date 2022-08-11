@@ -57,6 +57,7 @@ const Home: NextPage = (props: any) => {
         isModified={resource.modified}
         updateModified={resource.updateModified}
         sendModifiedTable={resource.sendModifiedTable}
+        onClickOutside={onClickOutside}
       />
       <ModifyData cellData={modify} updateCellData={resource.updateCellData} />
     </div>

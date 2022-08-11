@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
 export const ModifyData = ({
@@ -19,8 +19,7 @@ export const ModifyData = ({
     setNewCell(e.target.value);
   };
 
-  const onSubmit = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const onSubmit = () => {
     const newCellData = {
       ...cellData,
       content: newCell,
@@ -34,9 +33,13 @@ export const ModifyData = ({
   return visible ? (
     <div className="flex flex-col text-center w-3/4 mx-auto xl:w-1/2">
       <TextareaAutosize
+        autoFocus
         placeholder="New Cell"
         className="text-center rounded-xl text-gray-600 focus:outline-none py-2 text-ellipsis my-5 xl:w-1/2 xl:mx-auto"
         onChange={onChange}
+        onKeyDown={(key: any) => {
+          if (key.code === "Enter" || key.code === "NumpadEnter") onSubmit();
+        }}
         value={newCell}
       />
       <button
