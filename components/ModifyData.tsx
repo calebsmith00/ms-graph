@@ -12,7 +12,7 @@ export const ModifyData = ({
   const [visible, setVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    setVisible(true);
+    if (cellData !== "") setVisible(true);
   }, [cellData]);
 
   const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
