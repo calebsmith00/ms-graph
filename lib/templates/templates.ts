@@ -176,7 +176,7 @@ class Templates {
 
     if (endpoint === undefined) return;
     const contentReq = await client
-      .api(endpoint)
+      .api(endpoint + "?includeIDs=true")
       .responseType(ResponseType.TEXT)
       .get();
 

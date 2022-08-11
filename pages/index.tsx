@@ -1,6 +1,7 @@
 import type { NextPage, NextPageContext } from "next";
 import { useState } from "react";
 import { ModifyData } from "../components/ModifyData";
+import SendModification from "../components/SendModification";
 import TableContainer from "../components/Table/Container";
 import useResource from "../hooks/useResource";
 import parse from "../lib/html";
@@ -16,7 +17,6 @@ const Home: NextPage = (props: any) => {
   const [modify, setModify] = useState<string>("");
 
   const handleClick = (metadata: any) => {
-    console.log(metadata);
     setModify(metadata);
   };
 
@@ -28,6 +28,11 @@ const Home: NextPage = (props: any) => {
         cellClick={handleClick}
       />
 
+      <SendModification
+        isModified={resource.modified}
+        updateModified={resource.updateModified}
+        sendModifiedTable={resource.sendModifiedTable}
+      />
       <ModifyData cellData={modify} updateCellData={resource.updateCellData} />
     </div>
   );

@@ -141,7 +141,7 @@ class Parser {
       if (currRow)
         rowVals.push({
           id: dataId,
-          text: currRow.innerText.trim(),
+          content: currRow.innerText.trim(),
         });
     });
 
@@ -183,15 +183,35 @@ class Parser {
     return this;
   }
 
+  editCell(data: any): Parser {
+    this.headers.contents.find((content: any) => {
+      if (content.headerId === data.headerId) {
+        content.content = data.content;
+        return true;
+      }
+    });
+
+    this.rows.forEach((row: any) => {
+      row.contents.find((rowMetadata: any) => {
+        if (rowMetadata.id === data.cellId) {
+          rowMetadata.content = data.content;
+          return true;
+        }
+      });
+    });
+
+    return this;
+  }
+
   constructFullTable(): Parser {
     const table = document.createElement("table");
     const headers = document.createElement("tr");
     const rows: any[] = [];
 
-    this.headers.contents.forEach((content: any, index: number) => {
+    this.headers.contents.forEach((content: any) => {
       const newHeader = document.createElement("td");
-      newHeader.setAttribute("data-id", `header-cell-${index}`);
-      newHeader.innerText = content;
+      newHeader.setAttribute("data-id", content.headerId);
+      newHeader.innerText = content.content;
       headers.appendChild(newHeader);
     });
 
@@ -201,11 +221,8 @@ class Parser {
 
       row.contents.forEach((rowContent: any, index: number) => {
         const newRowTd = document.createElement("td");
-        newRowTd.setAttribute(
-          "data-id",
-          `${row.id.substring("row-".length)}-cell-${index}`
-        );
-        newRowTd.innerText = rowContent;
+        newRowTd.setAttribute("data-id", rowContent.id);
+        newRowTd.innerText = rowContent.content;
         newRow.appendChild(newRowTd);
       });
 
@@ -213,12 +230,12 @@ class Parser {
     });
 
     table.setAttribute("data-id", this.table.id);
+    table.id = this.table.element.id;
     headers.setAttribute("data-id", this.headers.id);
 
     table.appendChild(headers);
     rows.forEach((row) => table.appendChild(row));
 
-    console.log("Finished");
     this.table = {
       ...this.table,
       element: table,
@@ -236,6 +253,7 @@ export default function parse(html: string): Parser | undefined {
   const htmlParser = new DOMParser();
   const htmlDoc: Document = htmlParser.parseFromString(html, "text/html");
 
+  console.log(htmlDoc);
   const data: Parser = Parser.init(htmlDoc)
     .setTableId("trainingTable")
     .getTable()
