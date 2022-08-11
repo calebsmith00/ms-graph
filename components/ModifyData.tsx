@@ -34,7 +34,7 @@ export const ModifyData = ({
   return visible ? (
     <div className="flex flex-col text-center w-3/4 mx-auto xl:w-1/2">
       <TextareaAutosize
-        placeholder={cellData.content}
+        placeholder="New Cell"
         className="text-center rounded-xl text-gray-600 focus:outline-none py-2 text-ellipsis my-5 xl:w-1/2 xl:mx-auto"
         onChange={onChange}
         value={newCell}

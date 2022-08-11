@@ -1,5 +1,5 @@
 import type { NextPage, NextPageContext } from "next";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ModifyData } from "../components/ModifyData";
 import SendModification from "../components/SendModification";
 import TableContainer from "../components/Table/Container";
@@ -8,6 +8,7 @@ import parse from "../lib/html";
 import { Templates } from "../lib/templates/templates";
 
 const Home: NextPage = (props: any) => {
+  const ref = useRef<any>(null);
   const resource = useResource({
     resource: props.templates.page.selected,
     newHeaders: ["Display Name"],
@@ -15,17 +16,41 @@ const Home: NextPage = (props: any) => {
     preParsed: parse(props.templates.content.raw),
   });
   const [modify, setModify] = useState<string>("");
+  const [activeCell, setActiveCell] = useState<any>({});
+
+  useEffect(() => {
+    document.addEventListener("click", onClickOutside, true);
+
+    return () => {
+      document.removeEventListener("click", onClickOutside, true);
+    };
+  }, []);
 
   const handleClick = (metadata: any) => {
+    setActiveCell({
+      cellId: metadata.cellId || metadata.headerId,
+      textColor: "text-red-500",
+    });
     setModify(metadata);
   };
 
+  const onClickOutside = (event: any) => {
+    if (!ref.current) return;
+    if (!ref.current.contains(event.target)) {
+      setActiveCell({
+        cellId: null,
+        textColor: "text-gray-200",
+      });
+    }
+  };
+
   return (
-    <div className="container mx-auto w-1/2 text-xl text-gray-200">
+    <div className="container mx-auto w-1/2 text-xl text-gray-200" ref={ref}>
       <TableContainer
         headers={resource.headers}
         rows={resource.rows}
         cellClick={handleClick}
+        activeCell={activeCell}
       />
 
       <SendModification

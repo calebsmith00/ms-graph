@@ -7,6 +7,7 @@ import TableRows from "./Rows";
 interface TableContainerProps {
   headers: string[];
   rows: any[][];
+  activeCell: any;
   cellClick?: Function;
   rowClick?: Function;
 }
@@ -18,7 +19,12 @@ export default function TableContainer(props: TableContainerProps) {
 
   const getRowData = (row: any[]) =>
     row.map((data, index) => (
-      <TableCell key={data.cellId} onClick={cellClick} data={data} />
+      <TableCell
+        key={data.cellId}
+        onClick={cellClick}
+        data={data}
+        activeCell={props.activeCell}
+      />
     ));
 
   const getRows = (rows: any[][]) =>
@@ -33,6 +39,7 @@ export default function TableContainer(props: TableContainerProps) {
       <TableHeaders
         headers={props.headers}
         onClick={cellClick || rowClick || defaultClick}
+        activeCell={props.activeCell}
       />
       <TableRows>{getRows(props.rows)}</TableRows>
     </table>
