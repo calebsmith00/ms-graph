@@ -1,4 +1,6 @@
 const defaultClick = () => {};
+import { forwardRef, MutableRefObject, ReactNode, useRef } from "react";
+import useOutsideClick from "../../hooks/useOutsideClick";
 import TableCell from "./Cell";
 import TableHeaders from "./Headers";
 import TableRow from "./Row";
@@ -8,14 +10,16 @@ interface TableContainerProps {
   headers: string[];
   rows: any[][];
   activeCell: any;
+  clickEventCallback: any;
   cellClick?: Function;
   rowClick?: Function;
 }
 
-export default function TableContainer(props: TableContainerProps) {
+const TableContainer = forwardRef((props: TableContainerProps, ref: any) => {
   if (props.headers === undefined || props.rows === undefined) return null;
   if (props.headers.length === 0 || props.rows.length === 0) return null;
   const { cellClick = undefined, rowClick = undefined } = props;
+  const outsideClick = useOutsideClick({ callback: props.clickEventCallback });
 
   const getRowData = (row: any[]) =>
     row.map((data, index) => (
@@ -35,7 +39,10 @@ export default function TableContainer(props: TableContainerProps) {
     ));
 
   return (
-    <table className="w-3/4 mx-auto text-left my-5 text-gray-300 rounded-xl">
+    <table
+      className="w-3/4 mx-auto text-left my-5 text-gray-300 rounded-xl"
+      ref={ref}
+    >
       <TableHeaders
         headers={props.headers}
         onClick={cellClick || rowClick || defaultClick}
@@ -44,4 +51,6 @@ export default function TableContainer(props: TableContainerProps) {
       <TableRows>{getRows(props.rows)}</TableRows>
     </table>
   );
-}
+});
+
+export default TableContainer;
