@@ -1,6 +1,7 @@
 import type { NextPage, NextPageContext } from "next";
 import { useEffect, useRef, useState } from "react";
 import { ModifyData } from "../components/ModifyData";
+import SelectNotebook from "../components/SelectNotebook";
 import SendModification from "../components/SendModification";
 import TableContainer from "../components/Table/Container";
 import useOutsideClick from "../hooks/useOutsideClick";
@@ -19,6 +20,7 @@ const Home: NextPage = (props: any) => {
 
   const [modify, setModify] = useState<string>("");
   const [activeCell, setActiveCell] = useState<any>({});
+  const [templates, setTemplates] = useState<any>(props.templates);
 
   const handleClick = (metadata: any) => {
     setActiveCell({
@@ -40,8 +42,37 @@ const Home: NextPage = (props: any) => {
     return ref.current;
   };
 
+  const updateResource = async (text: string, resource: string) => {
+    const collection = templates[resource].collection || [];
+    const foundCollection = collection.find((collection: any) => {
+      if (
+        collection.title === text ||
+        collection.displayName === text ||
+        collection.id === text
+      ) {
+        return true;
+      }
+    });
+
+    templates[resource].selected = foundCollection;
+
+    switch (resource) {
+      case "notebook":
+    }
+  };
+
+  const requestNewResource = (resource: string) => {
+    return props.templates[resource].collection;
+  };
+
   return (
     <div className="container mx-auto w-1/2 text-xl text-gray-200">
+      <SelectNotebook
+        resource={props.templates.notebook.collection}
+        updateResource={updateResource}
+        requestNewResource={requestNewResource}
+      />
+
       <TableContainer
         ref={ref}
         clickEventCallback={onClickOutside}
