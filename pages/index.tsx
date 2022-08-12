@@ -41,6 +41,7 @@ const Home: NextPage = (props: any) => {
         cellId: null,
         textColor: "text-gray-200",
       });
+      setModify("");
     }
   };
 
